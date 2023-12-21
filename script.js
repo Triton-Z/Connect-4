@@ -41,17 +41,24 @@ const detectPlace = (e) => {
 				return;
 			}
 
-			if (!checkWin()) {
+			if ((!checkWin()) && (!checkTie())) {
 				if (playerTurn == 1) {
 					playerTurn = 2
 				} else {
 					playerTurn = 1;
 				}
 			} else {
-				alert(`Player ${playerTurn} (${["red", "blue"][playerTurn - 1]}) won!`);
-				board = Array.from(Array(row), () => new Array(column).fill(0));
-				playerTurn = 1;
-				update();
+				if (checkWin()) {
+					alert(`Player ${playerTurn} (${["red", "blue"][playerTurn - 1]}) won!`);
+          board = Array.from(Array(row), () => new Array(column).fill(0));
+          playerTurn = 1;
+          update();
+        } else if (checkTie()) {
+        	alert(`Tied!`);
+          board = Array.from(Array(row), () => new Array(column).fill(0));
+          playerTurn = 1;
+          update();
+        }
 			}
 
 			return;
@@ -140,6 +147,16 @@ const checkWin = () => {
 	}
 
 	return false;
+}
+
+const checkTie = () => {
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].includes(0)) {
+    	return false;
+    }
+  }
+  
+  return true;
 }
 
 const placeable = (c) => {
