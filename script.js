@@ -1,6 +1,6 @@
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
-
+//bals
 let row = 7;
 let column = 6;
 let diameter = 25;
@@ -9,6 +9,7 @@ let board = Array.from(Array(row), () => new Array(column).fill(0));
 
 let boardClicks = [];
 
+let gameOver = false;
 let playerTurn = 1;
 
 const adjustDiameter = () => {
@@ -30,7 +31,14 @@ const resize = () => {
 }
 
 const detectPlace = (e) => {
-	const rect = canvas.getBoundingClientRect();
+	if (gameOver) {
+  	gameOver = false;
+  	board = Array.from(Array(row), () => new Array(column).fill(0));
+    update();
+    return;
+  }
+  
+  const rect = canvas.getBoundingClientRect();
 	const x = e.clientX - rect.left;
 
 	for (let i = 0; i < boardClicks.length; i++) {
@@ -50,15 +58,11 @@ const detectPlace = (e) => {
 			} else {
 				if (checkWin()) {
 					alert(`Player ${playerTurn} (${["red", "blue"][playerTurn - 1]}) won!`);
-          board = Array.from(Array(row), () => new Array(column).fill(0));
-          playerTurn = 1;
-          update();
         } else if (checkTie()) {
         	alert(`Tied!`);
-          board = Array.from(Array(row), () => new Array(column).fill(0));
-          playerTurn = 1;
-          update();
         }
+        gameOver = true;
+        playerTurn = 1;
 			}
 
 			return;
